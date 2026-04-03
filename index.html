@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de IDEs Java — DAM/DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0f11;
+    --bg2: #16181c;
+    --bg3: #1e2128;
+    --bg4: #262930;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8e9eb;
+    --text2: #9fa3ad;
+    --text3: #6b6f7a;
+    --accent: #7c9cff;
+    --accent2: #a78bfa;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --teal: #2dd4bf;
+    --nb: #1890ff;
+    --vsc: #0098ff;
+    --ij: #fe315d;
+    --ec: #2c2255;
+    --ec-l: #7c5cbf;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --serif: 'Fraunces', serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem;
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .header-title {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .header-title span {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .header-meta {
+    font-size: 12px; color: var(--text3);
+    font-family: var(--mono);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px; border-radius: 20px;
+    font-size: 11px; font-family: var(--mono);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    background: var(--bg3);
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  /* ---- LAYOUT ---- */
+  .layout {
+    max-width: 1100px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* ---- SIDEBAR ---- */
+  aside {
+    border-right: 1px solid var(--border);
+    padding: 2rem 1.25rem;
+    position: sticky; top: 88px;
+    height: calc(100vh - 88px);
+    overflow-y: auto;
+  }
+
+  .sidebar-label {
+    font-size: 10px; font-family: var(--mono);
+    color: var(--text3); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .topic-list { list-style: none; margin-bottom: 2rem; }
+
+  .topic-list li button {
+    width: 100%; text-align: left;
+    background: none; border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    font-family: var(--sans); font-size: 14px;
+    color: var(--text2); cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .topic-list li button:hover { color: var(--text); background: var(--bg3); }
+
+  .topic-list li button.active {
+    color: var(--accent);
+    background: rgba(124,156,255,0.1);
+    font-weight: 500;
+  }
+
+  .topic-icon {
+    width: 20px; height: 20px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0;
+  }
+
+  .ide-section-label {
+    font-size: 10px; font-family: var(--mono);
+    color: var(--text3); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+    padding: 0 0.5rem; margin-top: 1.5rem;
+  }
+
+  .ide-pill-list { display: flex; flex-direction: column; gap: 4px; }
+
+  .ide-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 10px; border-radius: 8px;
+    font-size: 12px; font-family: var(--mono);
+    color: var(--text3);
+  }
+
+  .ide-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ---- MAIN CONTENT ---- */
+  main { padding: 2rem 2.5rem; }
+
+  /* ---- IDE TABS ---- */
+  .ide-tabs-bar {
+    display: flex; gap: 6px; margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .ide-tab {
+    padding: 7px 16px; border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    font-family: var(--mono); font-size: 12px;
+    color: var(--text2); cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 7px;
+  }
+
+  .ide-tab:hover { border-color: var(--border2); color: var(--text); background: var(--bg4); }
+
+  .ide-tab.active { color: var(--text); border-color: var(--border2); }
+  .ide-tab[data-ide="nb"].active { background: rgba(24,144,255,0.12); border-color: rgba(24,144,255,0.3); color: #60b4ff; }
+  .ide-tab[data-ide="vsc"].active { background: rgba(0,152,255,0.12); border-color: rgba(0,152,255,0.3); color: #60c0ff; }
+  .ide-tab[data-ide="ij"].active { background: rgba(254,49,93,0.12); border-color: rgba(254,49,93,0.35); color: #ff7a9a; }
+  .ide-tab[data-ide="ec"].active { background: rgba(124,92,191,0.15); border-color: rgba(124,92,191,0.4); color: #b49be8; }
+
+  .ide-color-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  /* ---- SECTION ---- */
+  .section { display: none; animation: fadeIn 0.2s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: 1.5rem; font-weight: 300;
+    color: var(--text); margin-bottom: 0.4rem;
+  }
+
+  .section-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
+
+  /* ---- STEPS ---- */
+  .steps { display: flex; flex-direction: column; gap: 10px; margin: 1.25rem 0; }
+
+  .step {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.15s;
+  }
+
+  .step:hover { border-color: var(--border2); }
+
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--bg4); border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-family: var(--mono); color: var(--text2);
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  .step-content { flex: 1; }
+  .step-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .step-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  code {
+    font-family: var(--mono); font-size: 12px;
+    background: var(--bg4); padding: 1px 6px;
+    border-radius: 4px; border: 1px solid var(--border2);
+    color: var(--teal);
+  }
+
+  kbd {
+    font-family: var(--mono); font-size: 11px;
+    background: var(--bg4); padding: 2px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border2);
+    border-bottom: 2px solid var(--border2);
+    color: var(--text);
+  }
+
+  /* ---- CALLOUTS ---- */
+  .tip, .warn, .note {
+    padding: 12px 16px; border-radius: var(--radius);
+    font-size: 13px; line-height: 1.65; margin: 1rem 0;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  .tip { background: rgba(124,156,255,0.08); border: 1px solid rgba(124,156,255,0.2); color: #a5b8ff; }
+  .warn { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); color: #fcd476; }
+  .note { background: rgba(45,212,191,0.07); border: 1px solid rgba(45,212,191,0.2); color: #5ee8d8; }
+
+  .callout-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ---- CODE BLOCK ---- */
+  .code-block {
+    background: #0a0b0d;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    font-family: var(--mono); font-size: 12.5px;
+    line-height: 1.8; color: #c9d1d9;
+    overflow-x: auto; margin: 1rem 0;
+    position: relative;
+  }
+
+  .code-block .lang-tag {
+    position: absolute; top: 10px; right: 12px;
+    font-size: 10px; color: var(--text3);
+    font-family: var(--mono); letter-spacing: 0.05em;
+  }
+
+  .c-kw { color: #ff7b72; }
+  .c-str { color: #a5d6ff; }
+  .c-cm { color: #8b949e; font-style: italic; }
+  .c-an { color: #ffa657; }
+  .c-fn { color: #d2a8ff; }
+  .c-num { color: #79c0ff; }
+  .c-tag { color: #7ee787; }
+  .c-attr { color: #ffa657; }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  /* ---- TOPIC HEADER PILL ---- */
+  .topic-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 4px 14px 4px 8px;
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 20px; font-size: 12px; font-family: var(--mono);
+    color: var(--text2); margin-bottom: 1rem;
+  }
+
+  .topic-pill-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem; text-align: center;
+    font-size: 12px; color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  footer a { color: var(--text2); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* ---- SCROLLBAR ---- */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 1.5rem 1rem; }
+    header { padding: 1.5rem 1rem; position: static; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    .header-meta { text-align: left; }
+  }
+
+  /* Print */
+  @media print {
+    aside { position: static; height: auto; }
+    .section { display: block !important; margin-bottom: 2rem; }
+    .ide-tabs-bar { display: none; }
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <p style="font-size:11px;font-family:var(--mono);color:var(--text3);margin-bottom:0.4rem;letter-spacing:0.1em;">MÓDULO · ENTORNOS DE DESARROLLO · DAM / DAW</p>
+      <h1 class="header-title">Guía práctica de <span>IDEs Java</span></h1>
+    </div>
+    <div class="header-meta">
+      <div>Debug · Unit Test · Refactor</div>
+      <div>Javadoc · Crear .jar</div>
+      <div style="margin-top:4px;">
+        <span class="badge">NetBeans</span>
+        <span class="badge">VS Code</span>
+        <span class="badge">IntelliJ</span>
+        <span class="badge">Eclipse</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <p class="sidebar-label">Contenidos</p>
+    <ul class="topic-list">
+      <li><button class="active" onclick="setTopic('debug', this)">
+        <span class="topic-icon" style="background:rgba(124,156,255,0.15);">🐛</span> Debug
+      </button></li>
+      <li><button onclick="setTopic('test', this)">
+        <span class="topic-icon" style="background:rgba(74,222,128,0.12);">✓</span> Unit Test
+      </button></li>
+      <li><button onclick="setTopic('refactor', this)">
+        <span class="topic-icon" style="background:rgba(167,139,250,0.12);">⟳</span> Refactor
+      </button></li>
+      <li><button onclick="setTopic('javadoc', this)">
+        <span class="topic-icon" style="background:rgba(251,191,36,0.12);">◈</span> Javadoc
+      </button></li>
+      <li><button onclick="setTopic('jar', this)">
+        <span class="topic-icon" style="background:rgba(45,212,191,0.12);">⬡</span> Crear .jar
+      </button></li>
+    </ul>
+
+    <p class="ide-section-label">IDEs</p>
+    <div class="ide-pill-list">
+      <div class="ide-pill"><div class="ide-dot" style="background:var(--nb)"></div>NetBeans</div>
+      <div class="ide-pill"><div class="ide-dot" style="background:var(--vsc)"></div>VS Code</div>
+      <div class="ide-pill"><div class="ide-dot" style="background:var(--ij)"></div>IntelliJ IDEA</div>
+      <div class="ide-pill"><div class="ide-dot" style="background:var(--ec-l)"></div>Eclipse</div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- IDE TABS -->
+    <div class="ide-tabs-bar">
+      <button class="ide-tab active" data-ide="nb" onclick="setIde('nb', this)">
+        <span class="ide-color-dot" style="background:var(--nb)"></span>NetBeans
+      </button>
+      <button class="ide-tab" data-ide="vsc" onclick="setIde('vsc', this)">
+        <span class="ide-color-dot" style="background:var(--vsc)"></span>VS Code
+      </button>
+      <button class="ide-tab" data-ide="ij" onclick="setIde('ij', this)">
+        <span class="ide-color-dot" style="background:var(--ij)"></span>IntelliJ IDEA
+      </button>
+      <button class="ide-tab" data-ide="ec" onclick="setIde('ec', this)">
+        <span class="ide-color-dot" style="background:var(--ec-l)"></span>Eclipse
+      </button>
+    </div>
+
+    <!-- ==================== DEBUG ==================== -->
+    <div id="nb-debug" class="section active">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#7c9cff"></div>Debug</div>
+      <div class="section-header">
+        <h2 class="section-title">Debug en NetBeans</h2>
+        <p class="section-desc">NetBeans integra un depurador visual completo basado en JPDA. Permite pausar la ejecución en cualquier línea, inspeccionar variables y el estado de la JVM en tiempo real.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Añadir un breakpoint</div>
+            <div class="step-text">Haz clic en el margen izquierdo de cualquier línea ejecutable. Aparecerá un cuadrado rojo. También puedes pulsar <kbd>Ctrl+F8</kbd> con el cursor en esa línea.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Iniciar el depurador</div>
+            <div class="step-text">Pulsa <kbd>Ctrl+F5</kbd> o ve a <code>Debug → Debug Project</code>. La ejecución se pausará cuando alcance el primer breakpoint.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Navegar por el código</div>
+            <div class="step-text"><kbd>F8</kbd> avanza una línea (Step Over) · <kbd>F7</kbd> entra en el método (Step Into) · <kbd>Shift+F7</kbd> sale del método (Step Out) · <kbd>F9</kbd> continúa hasta el siguiente breakpoint.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Inspeccionar variables</div>
+            <div class="step-text">La pestaña <code>Variables</code> en el panel inferior muestra el valor de cada variable en el ámbito actual. Puedes expandir objetos para ver sus atributos.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Watches y evaluación de expresiones</div>
+            <div class="step-text">En la pestaña <code>Watches</code> añade expresiones como <code>lista.size()</code> o <code>obj.getNombre()</code> para monitorizar su valor en cada paso.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Breakpoint condicional: clic derecho sobre el breakpoint → <em>Breakpoint Properties</em> → activa <em>Condition</em> y escribe, por ejemplo, <code>i == 10</code>. El programa solo se detendrá cuando se cumpla.</span></div>
+      <div class="code-block"><span class="lang-tag">Java</span><span class="c-kw">public class</span> <span class="c-fn">EjemploDebug</span> {
+    <span class="c-kw">public static void</span> <span class="c-fn">main</span>(String[] args) {
+        <span class="c-kw">int</span>[] numeros = {<span class="c-num">3</span>, <span class="c-num">7</span>, <span class="c-num">0</span>, <span class="c-num">2</span>};
+        <span class="c-kw">int</span> suma = <span class="c-num">0</span>;
+        <span class="c-cm">// ← Pon el breakpoint aquí para observar el bucle</span>
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> n : numeros) {
+            suma += n;       <span class="c-cm">// Observa "suma" en la pestaña Variables</span>
+        }
+        System.out.<span class="c-fn">println</span>(<span class="c-str">"Suma: "</span> + suma);
+    }
+}</div>
+    </div>
+
+    <div id="vsc-debug" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#7c9cff"></div>Debug</div>
+      <div class="section-header">
+        <h2 class="section-title">Debug en VS Code</h2>
+        <p class="section-desc">Requiere la extensión <strong>Extension Pack for Java</strong> de Microsoft. Una vez instalada, el flujo de debug es completo y visual, integrado en el panel lateral.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Instalar la extensión</div>
+            <div class="step-text">Busca <code>Extension Pack for Java</code> en el Marketplace e instálala. Incluye el Language Server, debugger, soporte Maven/Gradle y más.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Añadir breakpoints</div>
+            <div class="step-text">Haz clic en el margen izquierdo del editor (aparece un punto rojo) o pulsa <kbd>F9</kbd> con el cursor en la línea.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Iniciar el debug</div>
+            <div class="step-text">Pulsa <kbd>F5</kbd>. Si no hay <code>launch.json</code>, VS Code lo genera automáticamente detectando la clase con <code>main()</code>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Controles de navegación</div>
+            <div class="step-text"><kbd>F10</kbd> Step Over · <kbd>F11</kbd> Step Into · <kbd>Shift+F11</kbd> Step Out · <kbd>F5</kbd> Continuar · <kbd>Shift+F5</kbd> Detener.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Panel Run and Debug</div>
+            <div class="step-text">El panel lateral <code>Run and Debug</code> (<kbd>Ctrl+Shift+D</kbd>) muestra variables locales, variables globales, pila de llamadas y breakpoints activos.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Clic derecho sobre una variable durante el debug → <em>Add to Watch</em>. También puedes hacer hover sobre cualquier variable para ver su valor inline en el editor.</span></div>
+      <div class="code-block"><span class="lang-tag">JSON — launch.json</span>{
+  <span class="c-attr">"version"</span>: <span class="c-str">"0.2.0"</span>,
+  <span class="c-attr">"configurations"</span>: [
+    {
+      <span class="c-attr">"type"</span>: <span class="c-str">"java"</span>,
+      <span class="c-attr">"name"</span>: <span class="c-str">"Launch EjemploDebug"</span>,
+      <span class="c-attr">"request"</span>: <span class="c-str">"launch"</span>,
+      <span class="c-attr">"mainClass"</span>: <span class="c-str">"com.ejemplo.EjemploDebug"</span>,
+      <span class="c-attr">"args"</span>: []
+    }
+  ]
+}</div>
+    </div>
+
+    <div id="ij-debug" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#fe315d"></div>Debug</div>
+      <div class="section-header">
+        <h2 class="section-title">Debug en IntelliJ IDEA</h2>
+        <p class="section-desc">IntelliJ IDEA tiene uno de los depuradores más potentes del mercado. Incluye evaluación de expresiones en caliente, Smart Step Into y modificación de valores en tiempo de ejecución.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Añadir breakpoints</div>
+            <div class="step-text">Haz clic en el margen izquierdo (gutter). Los breakpoints se muestran con un círculo rojo. <kbd>Ctrl+F8</kbd> alterna el breakpoint de la línea actual.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Iniciar el depurador</div>
+            <div class="step-text">Pulsa <kbd>Shift+F9</kbd> o el icono del insecto verde. También puedes hacer clic derecho en la clase → <code>Debug 'NombreClase.main()'</code>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Navegar por el código</div>
+            <div class="step-text"><kbd>F8</kbd> Step Over · <kbd>F7</kbd> Step Into · <kbd>Shift+F8</kbd> Step Out · <kbd>F9</kbd> Resume · <kbd>Alt+F9</kbd> Run to cursor (sin breakpoint).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Evaluar expresiones</div>
+            <div class="step-text">Pulsa <kbd>Alt+F8</kbd> para abrir el evaluador de expresiones. Puedes ejecutar cualquier código Java en el contexto actual del programa. Muy útil para probar hipótesis.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Modificar valores en caliente</div>
+            <div class="step-text">En el panel Variables, haz doble clic en el valor de una variable para modificarlo mientras el programa está pausado. Ideal para probar escenarios sin reiniciar.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span><strong>Smart Step Into</strong> (<kbd>Shift+F7</kbd>): cuando una línea tiene varias llamadas encadenadas, IntelliJ te pregunta en cuál quieres entrar en lugar de entrar en todas. Enormemente útil con streams y lambdas.</span></div>
+      <div class="warn"><span class="callout-icon">⚠</span><span>La función <em>Hot Swap</em> permite modificar el código fuente y recargarlo sin reiniciar el programa, pero solo funciona con cambios dentro de métodos. Cambios en la firma de métodos o atributos requieren reinicio.</span></div>
+    </div>
+
+    <div id="ec-debug" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:var(--ec-l)"></div>Debug</div>
+      <div class="section-header">
+        <h2 class="section-title">Debug en Eclipse</h2>
+        <p class="section-desc">Eclipse tiene un depurador maduro integrado en su perspectiva <em>Debug</em>. Cambia automáticamente de perspectiva al iniciar el debug, mostrando todos los paneles necesarios.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Añadir breakpoints</div>
+            <div class="step-text">Doble clic en el margen izquierdo de cualquier línea o <kbd>Ctrl+Shift+B</kbd>. El breakpoint aparece como un punto azul.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Iniciar el depurador</div>
+            <div class="step-text">Pulsa <kbd>F11</kbd> o ve a <code>Run → Debug As → Java Application</code>. Eclipse te preguntará si quieres cambiar a la perspectiva Debug: acepta.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Navegar por el código</div>
+            <div class="step-text"><kbd>F6</kbd> Step Over · <kbd>F5</kbd> Step Into · <kbd>F7</kbd> Step Return · <kbd>F8</kbd> Resume · <kbd>Ctrl+R</kbd> Run to Line.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Perspectiva Debug</div>
+            <div class="step-text">La perspectiva muestra: panel <em>Debug</em> (pila de llamadas), <em>Variables</em> (valores actuales), <em>Breakpoints</em> (lista de puntos de ruptura) y <em>Expressions</em> (watches).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Display view y evaluación</div>
+            <div class="step-text">Abre <code>Window → Show View → Display</code>. Escribe cualquier expresión Java, selecciónala y pulsa <kbd>Ctrl+Shift+D</kbd> para evaluarla en el contexto actual.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Breakpoint condicional: clic derecho en el breakpoint → <em>Breakpoint Properties</em> → activa <em>Enable Condition</em>. También puedes configurar que se detenga solo después de N pasos (<em>Hit Count</em>).</span></div>
+    </div>
+
+    <!-- ==================== UNIT TEST ==================== -->
+    <div id="nb-test" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#4ade80"></div>Unit Test</div>
+      <div class="section-header">
+        <h2 class="section-title">Unit Test en NetBeans (JUnit)</h2>
+        <p class="section-desc">NetBeans tiene soporte nativo para JUnit 4 y JUnit 5 y puede generar automáticamente el esqueleto de la clase de test.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Generar la clase de test</div><div class="step-text">Clic derecho en la clase → <code>Tools → Create/Update Tests</code>. NetBeans crea la clase en <code>test/</code> con un método por cada método público.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Escribir los métodos de test</div><div class="step-text">Decora cada método con <code>@Test</code> y usa <code>assertEquals</code>, <code>assertTrue</code>, <code>assertThrows</code>, etc. del paquete <code>org.junit.jupiter.api</code>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ejecutar los tests</div><div class="step-text"><kbd>Alt+F6</kbd> ejecuta todos los tests del proyecto. Clic derecho en la clase de test → <code>Run File</code> ejecuta solo esa clase.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Interpretar resultados</div><div class="step-text">El panel <code>Test Results</code> muestra en verde los tests pasados y en rojo los fallidos, con el mensaje de error y la traza de pila exacta.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">Java — JUnit 5</span><span class="c-kw">import</span> org.junit.jupiter.api.*;
+<span class="c-kw">import static</span> org.junit.jupiter.api.Assertions.*;
+
+<span class="c-kw">class</span> <span class="c-fn">CalculadoraTest</span> {
+
+    <span class="c-kw">private</span> Calculadora calc;
+
+    <span class="c-an">@BeforeEach</span>
+    <span class="c-kw">void</span> <span class="c-fn">setUp</span>() { calc = <span class="c-kw">new</span> Calculadora(); }
+
+    <span class="c-an">@Test</span>
+    <span class="c-kw">void</span> <span class="c-fn">testSuma</span>() {
+        assertEquals(<span class="c-num">7</span>, calc.<span class="c-fn">suma</span>(<span class="c-num">3</span>, <span class="c-num">4</span>), <span class="c-str">"3+4 debe ser 7"</span>);
+    }
+
+    <span class="c-an">@Test</span>
+    <span class="c-kw">void</span> <span class="c-fn">testDivisionPorCero</span>() {
+        assertThrows(ArithmeticException.<span class="c-kw">class</span>,
+            () -> calc.<span class="c-fn">dividir</span>(<span class="c-num">10</span>, <span class="c-num">0</span>));
+    }
+}</div>
+      <div class="warn"><span class="callout-icon">⚠</span><span>Para proyectos Maven añade JUnit al <code>pom.xml</code> con <code>&lt;scope&gt;test&lt;/scope&gt;</code>. Para proyectos Ant, añade el JAR de JUnit en <code>Project Properties → Libraries → Add JAR/Folder</code>.</span></div>
+    </div>
+
+    <div id="vsc-test" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#4ade80"></div>Unit Test</div>
+      <div class="section-header">
+        <h2 class="section-title">Unit Test en VS Code (JUnit)</h2>
+        <p class="section-desc">Con el Extension Pack for Java, VS Code detecta automáticamente las clases de test y muestra un panel de Testing completo con ejecución individual o masiva.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Configurar JUnit en Maven</div><div class="step-text">Añade la dependencia en el <code>pom.xml</code>. VS Code detectará automáticamente el framework.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Crear la clase de test</div><div class="step-text">Crea manualmente la clase en <code>src/test/java/</code>. VS Code la reconoce por las anotaciones <code>@Test</code>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Panel Testing</div><div class="step-text">Abre el panel <code>Testing</code> (icono de tubo de ensayo en la barra lateral). Muestra todos los tests organizados en árbol.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Ejecutar y depurar tests</div><div class="step-text">Junto a cada método <code>@Test</code> aparece un icono de play. Puedes ejecutar o depurar un test individual sin salir del editor.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">XML — pom.xml</span>&lt;<span class="c-tag">dependency</span>&gt;
+  &lt;<span class="c-tag">groupId</span>&gt;org.junit.jupiter&lt;/<span class="c-tag">groupId</span>&gt;
+  &lt;<span class="c-tag">artifactId</span>&gt;junit-jupiter&lt;/<span class="c-tag">artifactId</span>&gt;
+  &lt;<span class="c-tag">version</span>&gt;5.10.2&lt;/<span class="c-tag">version</span>&gt;
+  &lt;<span class="c-tag">scope</span>&gt;test&lt;/<span class="c-tag">scope</span>&gt;
+&lt;/<span class="c-tag">dependency</span>&gt;</div>
+      <div class="tip"><span class="callout-icon">💡</span><span>VS Code muestra el resultado inline junto al método: tick verde o X roja. Con <code>@ParameterizedTest</code> y <code>@ValueSource</code> puedes ejecutar el mismo test con múltiples valores de entrada.</span></div>
+    </div>
+
+    <div id="ij-test" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#4ade80"></div>Unit Test</div>
+      <div class="section-header">
+        <h2 class="section-title">Unit Test en IntelliJ IDEA (JUnit)</h2>
+        <p class="section-desc">IntelliJ IDEA ofrece la experiencia de testing más completa: genera tests automáticamente, soporta JUnit 4/5 y TestNG, e integra cobertura de código (Coverage) de serie.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Generar la clase de test</div><div class="step-text">Coloca el cursor en el nombre de la clase → <kbd>Alt+Enter</kbd> → <em>Create Test</em>. Un asistente te permite elegir el framework y marcar qué métodos testear.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Escribir los tests</div><div class="step-text">IntelliJ añade JUnit automáticamente a las dependencias del proyecto. Escribe los métodos con <code>@Test</code> y los assertions de JUnit 5.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ejecutar tests</div><div class="step-text"><kbd>Ctrl+Shift+F10</kbd> ejecuta el fichero actual. El panel inferior muestra los resultados en árbol con tiempo de ejecución.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Cobertura de código</div><div class="step-text">Clic derecho → <em>Run with Coverage</em>. IntelliJ colorea el código en verde (cubierto) y rojo (no cubierto), y muestra el porcentaje por clase y método.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Con <kbd>Alt+Enter</kbd> en un assertion fallido, IntelliJ sugiere corregir el valor esperado al valor real. También genera automáticamente los imports necesarios.</span></div>
+      <div class="note"><span class="callout-icon">ℹ</span><span>IntelliJ IDEA Community (gratuita) incluye soporte completo de JUnit. La edición Ultimate añade integración con frameworks de testing adicionales como Mockito, Spock o Cucumber.</span></div>
+    </div>
+
+    <div id="ec-test" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#4ade80"></div>Unit Test</div>
+      <div class="section-header">
+        <h2 class="section-title">Unit Test en Eclipse (JUnit)</h2>
+        <p class="section-desc">Eclipse fue uno de los primeros IDEs en integrar JUnit nativamente. La integración es madura y completa, con soporte para JUnit 4 y JUnit 5 mediante el launcher Jupiter.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Añadir JUnit al proyecto</div><div class="step-text">Clic derecho en el proyecto → <code>Build Path → Add Libraries → JUnit</code>. Elige JUnit 5 (Jupiter) para proyectos nuevos.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Generar clase de test</div><div class="step-text">Clic derecho en la clase → <code>New → JUnit Test Case</code>. Eclipse genera el fichero en una carpeta <code>test/</code> separada.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ejecutar tests</div><div class="step-text">Clic derecho en la clase de test → <code>Run As → JUnit Test</code> o <kbd>Alt+Shift+X, T</kbd>. La vista JUnit se abre automáticamente.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Vista JUnit</div><div class="step-text">Muestra la barra de progreso (verde/rojo), el árbol de tests con su estado, y el mensaje de error completo al hacer clic en un test fallido.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Eclipse integra EclEmma para medir la cobertura: clic derecho → <em>Coverage As → JUnit Test</em>. El código cubierto aparece en verde, el no cubierto en rojo, directamente en el editor.</span></div>
+    </div>
+
+    <!-- ==================== REFACTOR ==================== -->
+    <div id="nb-refactor" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#a78bfa"></div>Refactor</div>
+      <div class="section-header">
+        <h2 class="section-title">Refactorización en NetBeans</h2>
+        <p class="section-desc">NetBeans realiza refactorizaciones automáticas y seguras, actualizando todas las referencias en el proyecto antes de aplicar el cambio, con vista previa.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Renombrar (Rename)</div><div class="step-text">Clic derecho sobre variable, método o clase → <code>Refactor → Rename</code> (<kbd>Ctrl+R</kbd>). Actualiza todas las referencias automáticamente.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Extraer método</div><div class="step-text">Selecciona un bloque de código → <code>Refactor → Extract Method</code>. NetBeans detecta los parámetros necesarios y crea el método nuevo.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Mover clase</div><div class="step-text">Clic derecho en la clase → <code>Refactor → Move</code>. Mueve la clase a otro paquete y actualiza todos los imports del proyecto.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Encapsular campos</div><div class="step-text">Clic derecho en un atributo → <code>Refactor → Encapsulate Fields</code>. Genera getters y setters y reemplaza el acceso directo por los métodos.</div></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Vista previa de cambios</div><div class="step-text">Antes de aplicar cualquier refactorización, NetBeans muestra un panel con todos los cambios que realizará. Puedes desmarcar los que no desees.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Usa <code>Refactor → Find Usages</code> antes de refactorizar para ver todos los lugares del código que se verán afectados. Evita sorpresas en clases que no conoces bien.</span></div>
+    </div>
+
+    <div id="vsc-refactor" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#a78bfa"></div>Refactor</div>
+      <div class="section-header">
+        <h2 class="section-title">Refactorización en VS Code</h2>
+        <p class="section-desc">VS Code ofrece refactorizaciones a través del menú contextual y el bombillo de sugerencias (<kbd>Ctrl+.</kbd>). Con la extensión Java activa, cubre los casos más comunes.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Renombrar símbolo</div><div class="step-text">Clic derecho → <code>Rename Symbol</code> (<kbd>F2</kbd>). Renombra en todos los ficheros del proyecto, incluyendo referencias en otras clases.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Extraer método o variable</div><div class="step-text">Selecciona el bloque → clic derecho → <code>Refactor...</code> → <em>Extract Method</em> o <em>Extract to constant/field</em>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Sugerencias del bombillo</div><div class="step-text">El icono de bombillo amarillo (o <kbd>Ctrl+.</kbd>) sugiere refactorizaciones según el contexto del cursor: convertir a lambda, invertir condición, etc.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Generar código</div><div class="step-text">Clic derecho → <code>Source Action</code> para generar getters/setters, constructores, <code>toString()</code>, <code>equals()</code> y <code>hashCode()</code> automáticamente.</div></div></div>
+      </div>
+      <div class="warn"><span class="callout-icon">⚠</span><span>VS Code tiene menos opciones de refactorización que NetBeans o IntelliJ. Para refactorizaciones avanzadas (mover clase, extraer interfaz, inline method) considera complementarlo con la extensión <code>Java Code Generators</code>.</span></div>
+    </div>
+
+    <div id="ij-refactor" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#a78bfa"></div>Refactor</div>
+      <div class="section-header">
+        <h2 class="section-title">Refactorización en IntelliJ IDEA</h2>
+        <p class="section-desc">IntelliJ IDEA tiene el sistema de refactorización más completo de los cuatro IDEs, con soporte para más de 40 refactorizaciones automáticas y análisis de impacto antes de aplicar.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Menú Refactor</div><div class="step-text">Clic derecho → <code>Refactor</code> o <kbd>Ctrl+Alt+Shift+T</kbd> abre el menú de refactorizaciones disponibles para el elemento bajo el cursor.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Rename</div><div class="step-text"><kbd>Shift+F6</kbd>. Soporta renombrar con preview, busca incluso en comentarios y cadenas de texto. Resalta las referencias antes de confirmar.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Extract / Inline</div><div class="step-text"><em>Extract Method</em> (<kbd>Ctrl+Alt+M</kbd>), <em>Extract Variable</em> (<kbd>Ctrl+Alt+V</kbd>), <em>Extract Constant</em> (<kbd>Ctrl+Alt+C</kbd>), <em>Inline</em> (<kbd>Ctrl+Alt+N</kbd>).</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Refactorizaciones de diseño</div><div class="step-text"><em>Extract Interface/Superclass</em>, <em>Pull Members Up/Down</em>, <em>Move</em> (<kbd>F6</kbd>), <em>Safe Delete</em>, <em>Change Signature</em> (<kbd>Ctrl+F6</kbd>).</div></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Inspecciones y correcciones</div><div class="step-text"><kbd>Alt+Enter</kbd> sobre cualquier advertencia muestra el menú de corrección rápida. IntelliJ detecta code smells y propone la refactorización adecuada.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span><strong>Safe Delete</strong>: IntelliJ comprueba si el elemento tiene referencias antes de borrarlo. Si las tiene, muestra un aviso con todos los usos. Nunca borrarás código usado por accidente.</span></div>
+    </div>
+
+    <div id="ec-refactor" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#a78bfa"></div>Refactor</div>
+      <div class="section-header">
+        <h2 class="section-title">Refactorización en Eclipse</h2>
+        <p class="section-desc">Eclipse ofrece un conjunto sólido de refactorizaciones automáticas accesibles desde el menú <code>Refactor</code> o mediante atajos de teclado.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Rename</div><div class="step-text">Selecciona el identificador → <kbd>Alt+Shift+R</kbd>. Eclipse renombra en todos los ficheros y muestra una vista previa de los cambios.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Extract Method</div><div class="step-text">Selecciona el bloque → <kbd>Alt+Shift+M</kbd>. Eclipse infiere automáticamente los parámetros y el tipo de retorno del nuevo método.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Extract Local Variable / Constant</div><div class="step-text"><kbd>Alt+Shift+L</kbd> extrae una expresión a variable local. Útil para dar nombre semántico a expresiones complejas.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Move y Change Method Signature</div><div class="step-text"><kbd>Alt+Shift+V</kbd> mueve la clase. <kbd>Alt+Shift+C</kbd> cambia la firma de un método actualizando todas sus llamadas.</div></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Quick Fix</div><div class="step-text"><kbd>Ctrl+1</kbd> sobre cualquier error o advertencia muestra las correcciones disponibles, muchas de ellas refactorizaciones automáticas.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>El menú <code>Source</code> de Eclipse complementa a <code>Refactor</code>: genera constructores, getters/setters, <code>toString()</code>, organiza imports (<kbd>Ctrl+Shift+O</kbd>) y formatea código (<kbd>Ctrl+Shift+F</kbd>).</span></div>
+    </div>
+
+    <!-- ==================== JAVADOC ==================== -->
+    <div id="nb-javadoc" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#fbbf24"></div>Javadoc</div>
+      <div class="section-header">
+        <h2 class="section-title">Generar Javadoc en NetBeans</h2>
+        <p class="section-desc">NetBeans genera la documentación HTML desde los comentarios <code>/** ... */</code> del código con un solo clic, sin necesidad de usar el terminal.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Escribir los comentarios Javadoc</div><div class="step-text">Escribe <code>/**</code> encima de una clase o método y pulsa <kbd>Enter</kbd>. NetBeans autocompleta la estructura con los <code>@param</code> y <code>@return</code> correctos.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Usar las etiquetas estándar</div><div class="step-text">Completa <code>@param nombre descripción</code>, <code>@return descripción</code>, <code>@throws ExcepcionClass motivo</code>, <code>@author nombre</code>, <code>@version 1.0</code>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Generar el Javadoc</div><div class="step-text">Ve a <code>Run → Generate Javadoc</code>. NetBeans invoca la herramienta javadoc y guarda el HTML en <code>dist/javadoc/</code>.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Visualizar la documentación</div><div class="step-text">El Javadoc se abre automáticamente en el navegador. El fichero principal es <code>dist/javadoc/index.html</code>.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">Java — Javadoc</span><span class="c-cm">/**
+ * Representa una calculadora básica de operaciones aritméticas.
+ *
+ * @author Ana García
+ * @version 1.2
+ * @since 2024
+ */</span>
+<span class="c-kw">public class</span> <span class="c-fn">Calculadora</span> {
+
+    <span class="c-cm">/**
+     * Divide dos enteros.
+     *
+     * @param dividendo el número a dividir
+     * @param divisor   el divisor (no puede ser cero)
+     * @return el resultado de la división entera
+     * @throws ArithmeticException si divisor es 0
+     */</span>
+    <span class="c-kw">public int</span> <span class="c-fn">dividir</span>(<span class="c-kw">int</span> dividendo, <span class="c-kw">int</span> divisor) {
+        <span class="c-kw">if</span> (divisor == <span class="c-num">0</span>) <span class="c-kw">throw new</span> ArithmeticException(<span class="c-str">"División por cero"</span>);
+        <span class="c-kw">return</span> dividendo / divisor;
+    }
+}</div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Activa la previsualización del Javadoc mientras escribes: abre el panel <code>Javadoc</code> en la ventana de autocompletado (<kbd>Ctrl+Space</kbd>), o coloca el cursor sobre cualquier clase/método de tu código.</span></div>
+    </div>
+
+    <div id="vsc-javadoc" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#fbbf24"></div>Javadoc</div>
+      <div class="section-header">
+        <h2 class="section-title">Generar Javadoc en VS Code</h2>
+        <p class="section-desc">VS Code no genera Javadoc de forma nativa, pero con la extensión adecuada para autocompletar los comentarios y el terminal integrado, el proceso es rápido.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Instalar extensión de ayuda</div><div class="step-text">Instala <code>Javadoc Tools</code> desde el Marketplace. Añade soporte para generar el javadoc directamente desde VS Code y autocompleta los comentarios.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Autocompletar comentarios</div><div class="step-text">Escribe <code>/**</code> encima de un método y pulsa <kbd>Enter</kbd>. La extensión genera automáticamente los <code>@param</code> y <code>@return</code>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Generar desde el terminal</div><div class="step-text">Abre el terminal integrado (<kbd>Ctrl+`</kbd>) y ejecuta el comando javadoc indicando el paquete fuente y el directorio de salida.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Abrir el resultado</div><div class="step-text">Abre <code>docs/index.html</code> en el navegador. Con la extensión <code>Live Preview</code> puedes verlo directamente dentro de VS Code.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">Bash — Terminal VS Code</span><span class="c-cm"># Generar Javadoc para un paquete completo</span>
+javadoc -d docs -sourcepath src -subpackages com.miapp \
+        -author -version -encoding UTF-8
+
+<span class="c-cm"># Para un solo fichero</span>
+javadoc -d docs src/Calculadora.java -author -version
+
+<span class="c-cm"># Con proyecto Maven (alternativa)</span>
+mvn javadoc:javadoc
+<span class="c-cm"># Resultado en: target/site/apidocs/index.html</span></div>
+    </div>
+
+    <div id="ij-javadoc" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#fbbf24"></div>Javadoc</div>
+      <div class="section-header">
+        <h2 class="section-title">Generar Javadoc en IntelliJ IDEA</h2>
+        <p class="section-desc">IntelliJ IDEA tiene soporte excelente para Javadoc: autocompleta las etiquetas, muestra la documentación renderizada en el popup de ayuda y genera el HTML desde el menú.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Autocompletar comentarios Javadoc</div><div class="step-text">Escribe <code>/**</code> sobre un método o clase y pulsa <kbd>Enter</kbd>. IntelliJ genera la plantilla completa con todos los parámetros y el retorno.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Previsualizar documentación</div><div class="step-text"><kbd>Ctrl+Q</kbd> sobre cualquier elemento muestra su Javadoc renderizado. Muy útil para verificar que la documentación tiene sentido antes de generar el HTML.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Generar el HTML</div><div class="step-text">Ve a <code>Tools → Generate JavaDoc</code>. Un diálogo te permite elegir el ámbito (proyecto completo, módulo o paquete), el directorio de salida y opciones adicionales.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Parámetros adicionales</div><div class="step-text">En el campo <em>Other command line arguments</em> del diálogo añade <code>-author -version -encoding UTF-8</code> para incluir esas etiquetas en la documentación generada.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>IntelliJ avisa con un warning si un método público no tiene comentario Javadoc. Activa la inspección en <code>Settings → Editor → Inspections → Javadoc</code> para localizar fácilmente la documentación pendiente.</span></div>
+    </div>
+
+    <div id="ec-javadoc" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#fbbf24"></div>Javadoc</div>
+      <div class="section-header">
+        <h2 class="section-title">Generar Javadoc en Eclipse</h2>
+        <p class="section-desc">Eclipse integra un asistente gráfico para generar Javadoc que permite configurar el ámbito, la visibilidad y los parámetros del comando en un único diálogo.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Autocompletar comentarios</div><div class="step-text">Escribe <code>/**</code> encima de una clase o método y pulsa <kbd>Enter</kbd>. Eclipse genera la plantilla con las etiquetas correctas.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Abrir el asistente Javadoc</div><div class="step-text">Ve a <code>Project → Generate Javadoc</code>. Eclipse abre un asistente de tres pasos.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Configurar el asistente</div><div class="step-text">Paso 1: selecciona el proyecto y la visibilidad (public/protected). Paso 2: indica el directorio de destino. Paso 3: añade argumentos extra como <code>-author -version</code>.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Generar y abrir</div><div class="step-text">Haz clic en <em>Finish</em>. Eclipse genera el HTML en la carpeta indicada y puedes abrirlo en el navegador externo o en el visor interno de Eclipse.</div></div></div>
+      </div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Eclipse muestra el Javadoc de cualquier clase o método en la vista <code>Javadoc</code> (<code>Window → Show View → Javadoc</code>). Al mover el cursor, se actualiza automáticamente mostrando la documentación del elemento actual.</span></div>
+    </div>
+
+    <!-- ==================== JAR ==================== -->
+    <div id="nb-jar" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#2dd4bf"></div>Crear .jar</div>
+      <div class="section-header">
+        <h2 class="section-title">Crear un .jar en NetBeans</h2>
+        <p class="section-desc">NetBeans genera el <code>.jar</code> ejecutable automáticamente al compilar el proyecto, incluyendo el <code>MANIFEST.MF</code> con la clase principal y el classpath de librerías.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Configurar la clase principal</div><div class="step-text">Clic derecho en el proyecto → <code>Properties → Run</code>. En el campo <em>Main Class</em>, indica la clase que contiene el método <code>main()</code>.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Compilar y empaquetar</div><div class="step-text">Pulsa <kbd>F11</kbd> (<em>Build Project</em>). NetBeans compila, ejecuta los tests y genera el <code>.jar</code> en la carpeta <code>dist/</code>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Localizar el artefacto</div><div class="step-text">El archivo se genera en <code>dist/NombreProyecto.jar</code>. Si hay librerías externas, se copian en <code>dist/lib/</code> y se referencian en el <code>MANIFEST.MF</code>.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Verificar la ejecución</div><div class="step-text">Abre un terminal en la carpeta del proyecto y ejecuta <code>java -jar dist/NombreProyecto.jar</code> para confirmar que funciona correctamente.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">MANIFEST.MF — generado por NetBeans</span>Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.x
+Main-Class: com.ejemplo.Main
+Class-Path: lib/commons-lang3.jar lib/gson.jar
+
+<span class="c-cm"># Ejecutar desde el terminal</span>
+java -jar dist/MiProyecto.jar
+java -jar dist/MiProyecto.jar argumento1 argumento2</div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Para crear un <em>fat jar</em> (con todas las librerías incluidas dentro del propio JAR), necesitas configurar la tarea Ant en <code>build.xml</code> o usar el plugin Maven Shade si el proyecto usa Maven.</span></div>
+    </div>
+
+    <div id="vsc-jar" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#2dd4bf"></div>Crear .jar</div>
+      <div class="section-header">
+        <h2 class="section-title">Crear un .jar en VS Code</h2>
+        <p class="section-desc">En VS Code hay tres formas de crear el <code>.jar</code>: usando el comando de exportar de la extensión Java, con Maven desde el terminal, o con los comandos básicos del JDK.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Opción A — Export Jar (extensión)</div><div class="step-text">Abre la paleta de comandos con <kbd>Ctrl+Shift+P</kbd> → escribe <code>Java: Export Jar</code>. Un asistente guiado te pide la clase principal y el destino del <code>.jar</code>.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Opción B — Maven Package</div><div class="step-text">Si el proyecto usa Maven, ejecuta <code>mvn package</code> en el terminal integrado. El <code>.jar</code> aparece en <code>target/NombreProyecto-version.jar</code>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Opción C — Comandos javac y jar</div><div class="step-text">Compila manualmente con <code>javac</code> y empaqueta con el comando <code>jar</code>. Útil para proyectos sin herramienta de build o para entender el proceso.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Verificar el contenido</div><div class="step-text">Usa <code>jar tf NombreProyecto.jar</code> para listar los ficheros incluidos y verificar que el <code>MANIFEST.MF</code> tiene la clase principal correcta.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">Bash</span><span class="c-cm"># ── Opción Maven ──────────────────────────────</span>
+mvn package
+java -jar target/MiProyecto-1.0-SNAPSHOT.jar
+
+<span class="c-cm"># ── Opción manual (sin Maven) ─────────────────</span>
+<span class="c-cm"># 1. Compilar todos los .java</span>
+javac -d out src/com/ejemplo/*.java
+
+<span class="c-cm"># 2. Crear el JAR con clase principal</span>
+jar cfe MiProyecto.jar com.ejemplo.Main -C out .
+
+<span class="c-cm"># 3. Verificar contenido</span>
+jar tf MiProyecto.jar</div>
+      <div class="warn"><span class="callout-icon">⚠</span><span>Sin Maven o Gradle, debes gestionar el classpath manualmente con el flag <code>-cp</code> si el proyecto usa librerías externas. Para proyectos reales se recomienda siempre usar un gestor de dependencias.</span></div>
+    </div>
+
+    <div id="ij-jar" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#2dd4bf"></div>Crear .jar</div>
+      <div class="section-header">
+        <h2 class="section-title">Crear un .jar en IntelliJ IDEA</h2>
+        <p class="section-desc">IntelliJ IDEA permite crear artefactos JAR desde su sistema de artefactos, con soporte para incluir dependencias y configurar el <code>MANIFEST.MF</code> de forma visual.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Abrir la configuración de artefactos</div><div class="step-text">Ve a <code>File → Project Structure</code> (<kbd>Ctrl+Alt+Shift+S</kbd>) → sección <em>Artifacts</em> → botón <code>+</code> → <em>JAR → From modules with dependencies</em>.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Configurar el artefacto</div><div class="step-text">Selecciona el módulo y la <em>Main Class</em>. Elige si extraer las dependencias dentro del JAR (fat jar) o referenciarlas externamente. Haz clic en <em>OK</em>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Compilar el artefacto</div><div class="step-text">Ve a <code>Build → Build Artifacts</code> → selecciona el artefacto → <em>Build</em>. El <code>.jar</code> se genera en la carpeta <code>out/artifacts/</code>.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Alternativa con Maven</div><div class="step-text">Si el proyecto usa Maven, usa el panel <em>Maven</em> en la barra lateral → <em>Lifecycle → package</em>. O configura el plugin <code>maven-jar-plugin</code> en el <code>pom.xml</code>.</div></div></div>
+      </div>
+      <div class="code-block"><span class="lang-tag">XML — pom.xml con maven-jar-plugin</span>&lt;<span class="c-tag">plugin</span>&gt;
+  &lt;<span class="c-tag">groupId</span>&gt;org.apache.maven.plugins&lt;/<span class="c-tag">groupId</span>&gt;
+  &lt;<span class="c-tag">artifactId</span>&gt;maven-jar-plugin&lt;/<span class="c-tag">artifactId</span>&gt;
+  &lt;<span class="c-tag">version</span>&gt;3.3.0&lt;/<span class="c-tag">version</span>&gt;
+  &lt;<span class="c-tag">configuration</span>&gt;
+    &lt;<span class="c-tag">archive</span>&gt;
+      &lt;<span class="c-tag">manifest</span>&gt;
+        &lt;<span class="c-tag">mainClass</span>&gt;com.ejemplo.Main&lt;/<span class="c-tag">mainClass</span>&gt;
+      &lt;/<span class="c-tag">manifest</span>&gt;
+    &lt;/<span class="c-tag">archive</span>&gt;
+  &lt;/<span class="c-tag">configuration</span>&gt;
+&lt;/<span class="c-tag">plugin</span>&gt;</div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Para un <em>fat jar</em> (todas las dependencias incluidas), usa el plugin <code>maven-shade-plugin</code> o <code>maven-assembly-plugin</code> en lugar de <code>maven-jar-plugin</code>. Esto genera un JAR completamente autocontenido.</span></div>
+    </div>
+
+    <div id="ec-jar" class="section">
+      <div class="topic-pill"><div class="topic-pill-dot" style="background:#2dd4bf"></div>Crear .jar</div>
+      <div class="section-header">
+        <h2 class="section-title">Crear un .jar en Eclipse</h2>
+        <p class="section-desc">Eclipse incluye un asistente <em>JAR Export</em> que guía paso a paso la creación del archivo, con opciones para incluir fuentes, recursos y configurar el <code>MANIFEST.MF</code>.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Abrir el asistente JAR Export</div><div class="step-text">Clic derecho en el proyecto → <code>Export</code> → <em>Java → JAR file</em> → <em>Next</em>.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Seleccionar recursos</div><div class="step-text">Marca el proyecto o los paquetes que quieres incluir. Puedes incluir o excluir los fuentes (<code>.java</code>) y los recursos (<code>.properties</code>, imágenes, etc.).</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Destino del archivo</div><div class="step-text">Indica la ruta completa donde se guardará el <code>.jar</code> y haz clic en <em>Next</em>.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Configurar MANIFEST.MF</div><div class="step-text">En el último paso selecciona <em>Generate the manifest file</em> e indica la <em>Main class</em>. También puedes usar un <code>MANIFEST.MF</code> propio si ya lo tienes preparado.</div></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Finalizar y verificar</div><div class="step-text">Haz clic en <em>Finish</em>. Verifica con <code>java -jar NombreProyecto.jar</code> desde el terminal que el programa arranca correctamente.</div></div></div>
+      </div>
+      <div class="warn"><span class="callout-icon">⚠</span><span>El asistente JAR de Eclipse no incluye las librerías externas (<code>.jar</code> de terceros) en el artefacto generado. Para incluirlas debes usar el asistente <em>Runnable JAR file</em> (en lugar de <em>JAR file</em>), que sí las empaqueta dentro.</span></div>
+      <div class="tip"><span class="callout-icon">💡</span><span>Para proyectos Maven en Eclipse (con M2E), puedes hacer clic derecho → <code>Run As → Maven build</code> → escribe <code>package</code> como goal. Más rápido y reproducible que el asistente gráfico.</span></div>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <p>Módulo Entornos de Desarrollo · Ciclos DAM / DAW &nbsp;·&nbsp; Java 17+ &nbsp;·&nbsp; JUnit 5 &nbsp;·&nbsp;
+    <a href="https://netbeans.apache.org" target="_blank">NetBeans</a> ·
+    <a href="https://code.visualstudio.com" target="_blank">VS Code</a> ·
+    <a href="https://www.jetbrains.com/idea/" target="_blank">IntelliJ IDEA</a> ·
+    <a href="https://www.eclipse.org" target="_blank">Eclipse</a>
+  </p>
+</footer>
+
+<script>
+  let currentTopic = 'debug';
+  let currentIde = 'nb';
+
+  function setTopic(topic, btn) {
+    currentTopic = topic;
+    document.querySelectorAll('.topic-list button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    showSection();
+  }
+
+  function setIde(ide, btn) {
+    currentIde = ide;
+    document.querySelectorAll('.ide-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    showSection();
+  }
+
+  function showSection() {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const id = currentIde + '-' + currentTopic;
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+  }
+</script>
+</body>
+</html>
